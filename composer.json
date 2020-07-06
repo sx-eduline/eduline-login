@@ -1,6 +1,6 @@
 {
     "name": "eduline/eduline-login",
-    "description": "eduline-v5 login",
+    "description": "eduline-v5 社会化登陆",
     "require": {
         "php": ">=7.1.0"
     },
