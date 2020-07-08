@@ -27,10 +27,10 @@ class Weixin extends Oauth
     protected $getAccesstokenURL = 'https://api.weixin.qq.com/sns/oauth2/access_token';
 
     /**
-     * 获取request_code的额外参数 URL查询字符串格式
-     * @var srting
+     * 授权作用域
+     * @var string
      */
-    protected $authorize = 'scope=snsapi_login';
+    protected $authscope = 'snsapi_login';
 
     /**
      * API根路径
@@ -78,6 +78,12 @@ class Weixin extends Oauth
                 $params = array_merge($params, $_param);
             }
         }
+
+        // 授权作用域
+        if ($this->authscope) {
+            $params['scope'] = $this->authscope;
+        }
+
         return $this->getRequestCodeURL . '?' . http_build_query($params) . "#wechat_redirect";
     }
 

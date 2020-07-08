@@ -44,6 +44,12 @@ abstract class Oauth
     protected $authorize = '';
 
     /**
+     * 授权作用域
+     * @var string
+     */
+    protected $authscope = '';
+
+    /**
      * 获取request_code请求的URL
      * @var string
      */
@@ -93,20 +99,25 @@ abstract class Oauth
      */
     public function getRequestCodeURL()
     {
-        //Oauth 标准参数
+        // Oauth 标准参数
         $params = array(
             'client_id'     => $this->appKey,
             'redirect_uri'  => $this->callback,
             'response_type' => $this->responseType,
         );
 
-        //获取额外参数
+        // 获取额外参数
         if ($this->authorize) {
             parse_str($this->authorize, $_param);
             if (is_array($_param)) {
                 $params = array_merge($params, $_param);
             }
         }
+        // 授权作用域
+        if ($this->authscope) {
+            $params['scope'] = $this->authscope;
+        }
+        
         return $this->getRequestCodeURL . '?' . http_build_query($params);
     }
 
@@ -179,7 +190,7 @@ abstract class Oauth
                 $opts[CURLOPT_URL] = $url . '?' . http_build_query($params);
                 break;
             case 'POST':
-                //判断是否传输文件
+                // 判断是否传输文件
                 $params                   = $multi ? $params : http_build_query($params);
                 $opts[CURLOPT_URL]        = $url;
                 $opts[CURLOPT_POST]       = 1;
@@ -200,6 +211,30 @@ abstract class Oauth
         }
 
         return $data;
+    }
+
+    /**
+     * 额外参数
+     * @Author   Martinsun<syh@sunyonghong.com>
+     * @DateTime 2020-07-08
+     * @param $params 授权的格外参数,可以是数组 或 URL查询字符串格式
+     */
+    public function authorize($params)
+    {
+        if (is_array($params)) {
+            $params = http_build_query($params);
+        }
+
+        $this->authorize = $params;
+    }
+
+    /**
+     * 授权作用域
+     * @param    string  $scope 授权作用域
+     */
+    public function authscope(string $scope)
+    {
+        $this->authscope = $scope;
     }
 
     /**

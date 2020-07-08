@@ -27,10 +27,10 @@ class Qq extends Oauth
     protected $getAccessTokenURL = 'https://graph.qq.com/oauth2.0/token';
 
     /**
-     * 获取request_code的额外参数,可在配置中修改 URL查询字符串格式
-     * @var srting
+     * 授权作用域
+     * @var string
      */
-    protected $authorize = 'scope=get_user_info';
+    protected $authscope = 'get_user_info';
 
     /**
      * API根路径
