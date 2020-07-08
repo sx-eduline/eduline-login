@@ -42,7 +42,7 @@ class Weixin extends Oauth
     {
         // 检测是否开启登陆方式
         $login = SystemConfig::get('system.package.login');
-        if (!in_array('sina', $login)) {
+        if (!in_array('weixin', $login)) {
             throw new LoginGatewayNotSupport("暂不支持该登陆方式");
         }
 
