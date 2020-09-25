@@ -1,5 +1,5 @@
 <?php
-declare (strict_types = 1);
+declare (strict_types=1);
 
 namespace eduline\login\gateways;
 
@@ -83,11 +83,6 @@ abstract class Oauth
             throw new InvalidConfig('请配置您申请的app_key和app_secret');
         }
 
-        if (!$config['callback']) {
-            throw new InvalidConfig('请配置回调页面地址');
-
-        }
-
         $this->appKey    = $config['app_key'];
         $this->appSecret = $config['app_secret'];
         $this->callback  = $config['callback'];
@@ -99,12 +94,16 @@ abstract class Oauth
      */
     public function getRequestCodeURL()
     {
+        if (!$this->callback) {
+            throw new InvalidConfig('请配置回调页面地址');
+
+        }
         // Oauth 标准参数
-        $params = array(
+        $params = [
             'client_id'     => $this->appKey,
             'redirect_uri'  => $this->callback,
             'response_type' => $this->responseType,
-        );
+        ];
 
         // 获取额外参数
         if ($this->authorize) {
@@ -117,7 +116,7 @@ abstract class Oauth
         if ($this->authscope) {
             $params['scope'] = $this->authscope;
         }
-        
+
         return $this->getRequestCodeURL . '?' . http_build_query($params);
     }
 
@@ -127,13 +126,13 @@ abstract class Oauth
      */
     public function getAccessToken($code, $extend = null)
     {
-        $params = array(
+        $params = [
             'client_id'     => $this->appKey,
             'client_secret' => $this->appSecret,
             'grant_type'    => $this->grantType,
             'code'          => $code,
-            'redirect_uri'  => $this->callback,
-        );
+            // 'redirect_uri'  => $this->callback,
+        ];
 
         $data        = $this->http($this->getAccessTokenURL, $params, 'POST');
         $this->token = $this->parseToken($data, $extend);
@@ -158,8 +157,8 @@ abstract class Oauth
 
     /**
      * 获取指定API请求的URL
-     * @param  string $api API名称
-     * @param  string $fix api后缀
+     * @param string $api API名称
+     * @param string $fix api后缀
      * @return string      请求的完整URL
      */
     protected function url($api = '', $fix = '')
@@ -169,20 +168,20 @@ abstract class Oauth
 
     /**
      * 发送HTTP请求方法，目前只支持CURL发送请求
-     * @param  string $url 请求URL
-     * @param  array $params 请求参数
-     * @param  string $method 请求方法GET/POST
+     * @param string $url 请求URL
+     * @param array $params 请求参数
+     * @param string $method 请求方法GET/POST
      * @return array  $data   响应数据
      */
-    protected function http($url, $params, $method = 'GET', $header = array(), $multi = false)
+    protected function http($url, $params, $method = 'GET', $header = [], $multi = false)
     {
-        $opts = array(
+        $opts = [
             CURLOPT_TIMEOUT        => 30,
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_SSL_VERIFYHOST => false,
             CURLOPT_HTTPHEADER     => $header,
-        );
+        ];
 
         /* 根据请求类型设置特定参数 */
         switch (strtoupper($method)) {
@@ -230,7 +229,7 @@ abstract class Oauth
 
     /**
      * 授权作用域
-     * @param    string  $scope 授权作用域
+     * @param string $scope 授权作用域
      */
     public function authscope(string $scope)
     {

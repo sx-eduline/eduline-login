@@ -1,9 +1,11 @@
 <?php
-declare (strict_types = 1);
+declare (strict_types=1);
+
 namespace eduline\login\gateways\weixin;
 
 use app\admin\logic\system\Config as SystemConfig;
 use eduline\login\exception\GatewayError;
+use eduline\login\exception\InvalidConfig;
 use eduline\login\exception\LoginGatewayNotSupport;
 use eduline\login\gateways\Oauth;
 
@@ -65,11 +67,15 @@ class Weixin extends Oauth
      */
     public function getRequestCodeURL()
     {
-        $params = array(
+        if (!$this->callback) {
+            throw new InvalidConfig('请配置回调页面地址');
+
+        }
+        $params = [
             'appid'         => $this->appKey,
             'redirect_uri'  => $this->callback,
             'response_type' => $this->responseType,
-        );
+        ];
 
         //获取额外参数
         if ($this->authorize) {
@@ -93,12 +99,12 @@ class Weixin extends Oauth
      */
     public function getAccesstoken($code, $extend = null)
     {
-        $params = array(
+        $params      = [
             'appid'      => $this->appKey,
             'secret'     => $this->appSecret,
             'grant_type' => $this->grantType,
             'code'       => $code,
-        );
+        ];
         $data        = $this->http($this->getAccesstokenURL, $params, 'POST');
         $this->token = $this->parsetoken($data, $extend);
         return $this->token;
@@ -106,20 +112,20 @@ class Weixin extends Oauth
 
     /**
      * 组装接口调用参数 并调用接口
-     * @param  string $api 微信 API
-     * @param  string $param 调用API的额外参数
-     * @param  string $method HTTP请求方法 默认为GET
+     * @param string $api 微信 API
+     * @param string $param 调用API的额外参数
+     * @param string $method HTTP请求方法 默认为GET
      * @return json
      */
     public function call($api, $param = '', $method = 'GET', $multi = false)
     {
         /* 微信调用公共参数 */
-        $params = array(
+        $params = [
             'access_token' => $this->token['access_token'],
             'openid'       => $this->openid(),
             'lang'         => 'zh_CN',
-        );
-        $data = $this->http($this->url($api), $this->param($params, $param), $method);
+        ];
+        $data   = $this->http($this->url($api), $this->param($params, $param), $method);
         return json_decode($data, true);
     }
 
