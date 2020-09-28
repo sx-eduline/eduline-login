@@ -88,7 +88,7 @@ class Qq extends Oauth
     protected function parseToken($result, $extend)
     {
         parse_str($result, $data);
-        if ($data['access_token'] && $data['expires_in']) {
+        if (isset($data['access_token']) && isset($data['expires_in'])) {
             $this->token    = $data;
             $data['openid'] = $this->openid();
             return $data;

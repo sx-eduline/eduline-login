@@ -135,13 +135,16 @@ class Weixin extends Oauth
     protected function parsetoken($result, $extend)
     {
         $data = json_decode($result, true);
-        if ($data['access_token'] && $data['expires_in']) {
-            $this->token    = $data;
-            $data['openid'] = $this->openid();
-            return $data;
-        } else {
+        // 存在errorcode时,表示有错误
+        if (isset($data['errcode'])) {
             throw new GatewayError("获取微信 ACCESS_TOKEN 出错：{$result}");
         }
+        // if ($data['access_token'] && $data['expires_in']) {
+        $this->token    = $data;
+        $data['openid'] = $this->openid();
+
+        return $data;
+
 
     }
 
