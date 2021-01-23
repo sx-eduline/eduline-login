@@ -1,29 +1,31 @@
 {
-    "name": "eduline/eduline-login",
-    "description": "eduline-v5 社会化登陆",
-    "require": {
-        "php": ">=7.1.0",
-        "topthink/framework": "^6.0.0"
-    },
-    "license": "Apache-2.0",
-    "authors": [{
-        "name": "sunyonghong",
-        "email": "syh@sunyonghong.com"
-    }],
-    "minimum-stability": "dev",
-    "config": {
-        "sort-packages": true
-    },
-    "autoload": {
-        "psr-4": {
-            "eduline\\login\\": "src/"
-        }
-    },
-    "extra": {
-        "think": {
-            "services": [
-                "eduline\\login\\LoginService"
-            ]       
-        }
+  "name": "eduline/eduline-login",
+  "description": "eduline-v5 社会化登陆",
+  "require": {
+    "php": ">=7.1.0",
+    "topthink/framework": "^6.0.0"
+  },
+  "license": "Apache-2.0",
+  "authors": [
+    {
+      "name": "sunyonghong",
+      "email": "syh@sunyonghong.com"
     }
+  ],
+  "minimum-stability": "dev",
+  "config": {
+    "sort-packages": true
+  },
+  "autoload": {
+    "psr-4": {
+      "eduline\\login\\": "src/"
+    }
+  },
+  "extra": {
+    "think": {
+      "services": [
+        "eduline\\login\\LoginService"
+      ]
+    }
+  }
 }

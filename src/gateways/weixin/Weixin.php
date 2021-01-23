@@ -18,24 +18,28 @@ class Weixin extends Oauth
 
     /**
      * 获取requestCode的api接口
+     *
      * @var string
      */
     protected $getRequestCodeURL = 'https://open.weixin.qq.com/connect/qrconnect';
 
     /**
      * 获取access_token的api接口
+     *
      * @var string
      */
     protected $getAccesstokenURL = 'https://api.weixin.qq.com/sns/oauth2/access_token';
 
     /**
      * 授权作用域
+     *
      * @var string
      */
     protected $authscope = 'snsapi_login';
 
     /**
      * API根路径
+     *
      * @var string
      */
     protected $apiBase = 'https://api.weixin.qq.com/';
@@ -95,6 +99,7 @@ class Weixin extends Oauth
 
     /**
      * 获取access_token
+     *
      * @param string $code 上一步请求到的code
      */
     public function getAccesstoken($code, $extend = null)
@@ -108,25 +113,6 @@ class Weixin extends Oauth
         $data        = $this->http($this->getAccesstokenURL, $params, 'POST');
         $this->token = $this->parsetoken($data, $extend);
         return $this->token;
-    }
-
-    /**
-     * 组装接口调用参数 并调用接口
-     * @param string $api 微信 API
-     * @param string $param 调用API的额外参数
-     * @param string $method HTTP请求方法 默认为GET
-     * @return json
-     */
-    public function call($api, $param = '', $method = 'GET', $multi = false)
-    {
-        /* 微信调用公共参数 */
-        $params = [
-            'access_token' => $this->token['access_token'],
-            'openid'       => $this->openid(),
-            'lang'         => 'zh_CN',
-        ];
-        $data   = $this->http($this->url($api), $this->param($params, $param), $method);
-        return json_decode($data, true);
     }
 
     /**
@@ -177,5 +163,25 @@ class Weixin extends Oauth
             throw new GatewayError("没有获取到微信用户unionid");
         }
 
+    }
+
+    /**
+     * 组装接口调用参数 并调用接口
+     *
+     * @param string $api    微信 API
+     * @param string $param  调用API的额外参数
+     * @param string $method HTTP请求方法 默认为GET
+     * @return json
+     */
+    public function call($api, $param = '', $method = 'GET', $multi = false)
+    {
+        /* 微信调用公共参数 */
+        $params = [
+            'access_token' => $this->token['access_token'],
+            'openid'       => $this->openid(),
+            'lang'         => 'zh_CN',
+        ];
+        $data   = $this->http($this->url($api), $this->param($params, $param), $method);
+        return json_decode($data, true);
     }
 }

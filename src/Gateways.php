@@ -1,5 +1,6 @@
 <?php
-declare (strict_types = 1);
+declare (strict_types=1);
+
 namespace eduline\login;
 
 use eduline\admin\page\PageForm;
@@ -8,8 +9,9 @@ class Gateways
 {
     /**
      * 获取支付方式列表
-     * @Author   Martinsun<syh@sunyonghong.com>
-     * @DateTime 2020-03-27
+     * Author   Martinsun<syh@sunyonghong.com>
+     * Date:  2020-03-27
+     *
      * @return   [type]                         [description]
      */
     public static function getGateways()
@@ -35,9 +37,10 @@ class Gateways
 
     /**
      * 获取配置界面表单
-     * @Author   Martinsun<syh@sunyonghong.com>
-     * @DateTime 2020-03-28
-     * @param    string                         $gateway [description]
+     * Author   Martinsun<syh@sunyonghong.com>
+     * Date:  2020-03-28
+     *
+     * @param string $gateway [description]
      * @return   [type]                                [description]
      */
     public static function getGatewayConfigPage(string $gateway)
@@ -53,9 +56,10 @@ class Gateways
 
     /**
      * 获取配置字段信息
-     * @Author   Martinsun<syh@sunyonghong.com>
-     * @DateTime 2020-03-27
-     * @param    string                         $gateway 储存端标识
+     * Author   Martinsun<syh@sunyonghong.com>
+     * Date:  2020-03-27
+     *
+     * @param string $gateway 储存端标识
      * @return   [type]                                [description]
      */
     public static function getGatewayConfig(string $gateway, $getClass = false)

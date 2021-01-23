@@ -1,5 +1,6 @@
 <?php
-declare (strict_types = 1);
+declare (strict_types=1);
+
 namespace eduline\login\admin\service;
 
 use app\admin\logic\system\Config as SystemConfig;
@@ -13,14 +14,15 @@ class Config extends BaseService
 {
     /**
      * 第三方登陆配置列表
-     * @Author   Martinsun<syh@sunyonghong.com>
-     * @DateTime 2020-03-27
+     * Author   Martinsun<syh@sunyonghong.com>
+     * Date:  2020-03-27
+     *
      * @return   [type]                         [description]
      */
     public function index()
     {
         $gateways = Gateways::getGateways();
-        
+
         $login = SystemConfig::get('system.package.login');
         // 查询配置
         foreach ($gateways as $key => $gateway) {
@@ -50,8 +52,9 @@ class Config extends BaseService
 
     /**
      * 登陆配置
-     * @Author   Martinsun<syh@sunyonghong.com>
-     * @DateTime 2020-03-27
+     * Author   Martinsun<syh@sunyonghong.com>
+     * Date:  2020-03-27
+     *
      * @return   [type]                         [description]
      */
     public function config($gateway)
@@ -64,16 +67,17 @@ class Config extends BaseService
 
     /**
      * 改变登陆状态
-     * @Author   Martinsun<syh@sunyonghong.com>
-     * @DateTime 2020-06-05
+     * Author   Martinsun<syh@sunyonghong.com>
+     * Date:  2020-06-05
+     *
      * @param    [type]                         $gateway [description]
      * @return   [type]                                  [description]
      */
     public function changeStatus($gateway)
     {
-        $key     = 'system.package.login';
-        $login = SystemConfig::get($key);
-        $status  = Request::post('status/d', 0);
+        $key    = 'system.package.login';
+        $login  = SystemConfig::get($key);
+        $status = Request::post('status/d', 0);
 
         if ($status == 1 && !in_array($gateway, $login)) {
             $login[] = $gateway;

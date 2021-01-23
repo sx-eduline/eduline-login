@@ -4,77 +4,90 @@ declare (strict_types=1);
 namespace eduline\login\gateways;
 
 use eduline\login\exception\InvalidConfig;
+use Exception;
 
 abstract class Oauth
 {
     /**
      * 申请应用时分配的app_key
+     *
      * @var string
      */
     protected $appKey = '';
 
     /**
      * 申请应用时分配的 app_secret
+     *
      * @var string
      */
     protected $appSecret = '';
 
     /**
      * 授权类型 response_type 目前只能为code
+     *
      * @var string
      */
     protected $responseType = 'code';
 
     /**
      * grant_type 目前只能为 authorization_code
+     *
      * @var string
      */
     protected $grantType = 'authorization_code';
 
     /**
      * 回调页面URL  可以通过配置文件配置
+     *
      * @var string
      */
     protected $callback = '';
 
     /**
      * 获取request_code的额外参数 URL查询字符串格式
+     *
      * @var srting
      */
     protected $authorize = '';
 
     /**
      * 授权作用域
+     *
      * @var string
      */
     protected $authscope = '';
 
     /**
      * 获取request_code请求的URL
+     *
      * @var string
      */
     protected $getRequestCodeURL = '';
 
     /**
      * 获取access_token请求的URL
+     *
      * @var string
      */
     protected $getAccessTokenURL = '';
 
     /**
      * API根路径
+     *
      * @var string
      */
     protected $apiBase = '';
 
     /**
      * 授权后获取到的TOKEN信息
+     *
      * @var array
      */
     protected $token = null;
 
     /**
      * 构造方法，配置应用信息
+     *
      * @param array $token
      */
     public function __construct(array $config)
@@ -122,6 +135,7 @@ abstract class Oauth
 
     /**
      * 获取access_token
+     *
      * @param string $code 上一步请求到的code
      */
     public function getAccessToken($code, $extend = null)
@@ -141,35 +155,10 @@ abstract class Oauth
     }
 
     /**
-     * 合并默认参数和额外参数
-     * @param array $params 默认参数
-     * @param array/string $param 额外参数
-     * @return array:
-     */
-    protected function param($params, $param)
-    {
-        if (is_string($param)) {
-            parse_str($param, $param);
-        }
-
-        return array_merge($params, $param);
-    }
-
-    /**
-     * 获取指定API请求的URL
-     * @param string $api API名称
-     * @param string $fix api后缀
-     * @return string      请求的完整URL
-     */
-    protected function url($api = '', $fix = '')
-    {
-        return $this->apiBase . $api . $fix;
-    }
-
-    /**
      * 发送HTTP请求方法，目前只支持CURL发送请求
-     * @param string $url 请求URL
-     * @param array $params 请求参数
+     *
+     * @param string $url    请求URL
+     * @param array  $params 请求参数
      * @param string $method 请求方法GET/POST
      * @return array  $data   响应数据
      */
@@ -196,7 +185,7 @@ abstract class Oauth
                 $opts[CURLOPT_POSTFIELDS] = $params;
                 break;
             default:
-                throw new \Exception('不支持的请求方式！');
+                throw new Exception('不支持的请求方式！');
         }
 
         /* 初始化并执行curl请求 */
@@ -206,16 +195,23 @@ abstract class Oauth
         $error = curl_error($ch);
         curl_close($ch);
         if ($error) {
-            throw new \Exception('请求发生错误：' . $error);
+            throw new Exception('请求发生错误：' . $error);
         }
 
         return $data;
     }
 
     /**
+     * 抽象方法，在SNSSDK中实现
+     * 解析access_token方法请求后的返回值
+     */
+    abstract protected function parseToken($result, $extend);
+
+    /**
      * 额外参数
-     * @Author   Martinsun<syh@sunyonghong.com>
-     * @DateTime 2020-07-08
+     * Author   Martinsun<syh@sunyonghong.com>
+     * Date:  2020-07-08
+     *
      * @param $params 授权的格外参数,可以是数组 或 URL查询字符串格式
      */
     public function authorize($params)
@@ -229,6 +225,7 @@ abstract class Oauth
 
     /**
      * 授权作用域
+     *
      * @param string $scope 授权作用域
      */
     public function authscope(string $scope)
@@ -238,19 +235,41 @@ abstract class Oauth
 
     /**
      * 抽象方法，在SNSSDK中实现
-     * 组装接口调用参数 并调用接口
-     */
-    abstract protected function call($api, $param = '', $method = 'GET', $multi = false);
-
-    /**
-     * 抽象方法，在SNSSDK中实现
-     * 解析access_token方法请求后的返回值
-     */
-    abstract protected function parseToken($result, $extend);
-
-    /**
-     * 抽象方法，在SNSSDK中实现
      * 获取当前授权用户的SNS标识
      */
     abstract public function openid();
+
+    /**
+     * 合并默认参数和额外参数
+     *
+     * @param array $params 默认参数
+     * @param array/string $param 额外参数
+     * @return array:
+     */
+    protected function param($params, $param)
+    {
+        if (is_string($param)) {
+            parse_str($param, $param);
+        }
+
+        return array_merge($params, $param);
+    }
+
+    /**
+     * 获取指定API请求的URL
+     *
+     * @param string $api API名称
+     * @param string $fix api后缀
+     * @return string      请求的完整URL
+     */
+    protected function url($api = '', $fix = '')
+    {
+        return $this->apiBase . $api . $fix;
+    }
+
+    /**
+     * 抽象方法，在SNSSDK中实现
+     * 组装接口调用参数 并调用接口
+     */
+    abstract protected function call($api, $param = '', $method = 'GET', $multi = false);
 }

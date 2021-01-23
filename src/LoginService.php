@@ -1,4 +1,5 @@
 <?php
+
 namespace eduline\login;
 
 use think\facade\Route;

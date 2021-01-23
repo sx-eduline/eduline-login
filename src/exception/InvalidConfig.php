@@ -1,8 +1,8 @@
 <?php
-declare (strict_types = 1);
+declare (strict_types=1);
+
 namespace eduline\login\exception;
 
-use eduline\login\exception\Exception;
 use think\facade\Env;
 
 /**
@@ -22,6 +22,7 @@ class InvalidConfig extends Exception
 
     /**
      * 获取验证错误信息
+     *
      * @access public
      * @return array|string
      */
