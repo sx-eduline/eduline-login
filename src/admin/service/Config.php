@@ -23,13 +23,13 @@ class Config extends BaseService
     {
         $gateways = Gateways::getGateways();
 
-        $login = SystemConfig::get('system.package.login');
+        $login = SystemConfig::get('system.package.login', [], request()->mhm_id);
         // 查询配置
         foreach ($gateways as $key => $gateway) {
             // 储存配置key
             $__key                    = 'system.package.login.' . $gateway['key'];
             $gateways[$key]['__key']  = $__key;
-            $gateways[$key]['config'] = SystemConfig::get($__key);
+            $gateways[$key]['config'] = SystemConfig::get($__key, [], request()->mhm_id);
             $gateways[$key]['status'] = in_array($gateway['key'], $login) ? 1 : 0;
         }
 
@@ -76,7 +76,7 @@ class Config extends BaseService
     public function changeStatus($gateway)
     {
         $key    = 'system.package.login';
-        $login  = SystemConfig::get($key);
+        $login  = SystemConfig::get($key, [], request()->mhm_id);
         $status = Request::post('status/d', 0);
 
         if ($status == 1 && !in_array($gateway, $login)) {
