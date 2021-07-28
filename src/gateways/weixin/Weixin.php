@@ -104,12 +104,20 @@ class Weixin extends Oauth
      */
     public function getAccesstoken($code, $extend = null)
     {
-        $params      = [
+        $params = [
             'appid'      => $this->appKey,
             'secret'     => $this->appSecret,
             'grant_type' => $this->grantType,
             'code'       => $code,
         ];
+
+        //获取额外参数
+        if ($this->authorize) {
+            parse_str($this->authorize, $_param);
+            if (is_array($_param)) {
+                $params = array_merge($params, $_param);
+            }
+        }
         $data        = $this->http($this->getAccesstokenURL, $params, 'POST');
         $this->token = $this->parsetoken($data, $extend);
         return $this->token;
