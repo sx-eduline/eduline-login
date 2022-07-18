@@ -22,6 +22,7 @@ class Config implements ConfigInterface
                 ['title' => 'H5端', 'value' => 'h5'],
                 ['title' => '安卓端', 'value' => 'android'],
                 ['title' => 'IOS端', 'value' => 'ios'],
+                ['title' => '小程序端', 'value' => 'miniapp'],
             ])->style(FormItem::option('ButtonStyle', 'BUTTON')),
         ];
 
