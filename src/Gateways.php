@@ -24,7 +24,7 @@ class Gateways
                 if ((is_dir($dir . '/' . $file)) && $file != '.' && $file != '..') {
                     // 读取.ini配置文件
                     $config = $dir . '/' . $file . '/' . '.ini';
-                    if (is_file($config)) {
+                    if (is_file($config) && $file != 'sina') {
                         $gateways[] = parse_ini_file($config, true, INI_SCANNER_TYPED);
                     }
                 }
