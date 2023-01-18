@@ -96,9 +96,9 @@ abstract class Oauth
             throw new InvalidConfig('请配置您申请的app_key和app_secret');
         }
 
-        $this->appKey    = $config['app_key'];
-        $this->appSecret = $config['app_secret'];
-        $this->callback  = $config['callback'];
+        $this->appKey    = $config['app_key']??'';
+        $this->appSecret = $config['app_secret']??'';
+        $this->callback  = $config['callback']??'';
 
     }
 
@@ -109,7 +109,6 @@ abstract class Oauth
     {
         if (!$this->callback) {
             throw new InvalidConfig('请配置回调页面地址');
-
         }
         // Oauth 标准参数
         $params = [
@@ -145,7 +144,7 @@ abstract class Oauth
             'client_secret' => $this->appSecret,
             'grant_type'    => $this->grantType,
             'code'          => $code,
-            // 'redirect_uri'  => $this->callback,
+            'redirect_uri'  => $this->callback,
         ];
 
         $data        = $this->http($this->getAccessTokenURL, $params, 'POST');
