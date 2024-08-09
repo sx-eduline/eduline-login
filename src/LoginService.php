@@ -11,14 +11,14 @@ class LoginService extends Service
     {
         $this->registerRoutes(function () {
             /** 接口路由 */
-            Route::group('system/package/login', function () {
+            Route::group('admin/system/package/login', function () {
                 // 登陆网关列表
                 Route::get('/list', 'index');
                 // 配置页面
                 Route::get('/<gateway>/config', 'config')->pattern(['gateway' => '[a-zA-Z_]+']);
                 // 启用配置
                 Route::post('/<gateway>/status', 'changeStatus')->pattern(['gateway' => '[a-zA-Z_]+']);
-            })->prefix('\eduline\login\admin\service\Config@')->middleware(['adminRoute']);
+            })->prefix('\eduline\login\admin\service\Config@')->middleware(['adminRoute', 'init', 'bindLoginUser']);
         });
     }
 }
